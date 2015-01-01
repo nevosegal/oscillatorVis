@@ -28,8 +28,12 @@ void ofApp::setup(){
     ofSetupScreen();
 //    ofBackground(0, 0, 0);
     ofSetVerticalSync(true);
-    ob = *new OscillatorButton(100,350);
-    
+    numOsc = 4;
+    osc_btns = new OscillatorButton[numOsc];
+    osc_btns[0] = *new OscillatorButton(150,350,"sine");
+    osc_btns[1] = *new OscillatorButton(250,350,"saw");
+    osc_btns[2] = *new OscillatorButton(350,350,"square");
+    osc_btns[3] = *new OscillatorButton(450,350,"tri");
     sampleRate 			= 44100; /* Sampling Rate */
     initialBufferSize	= 512;	/* Buffer Size. you have to fill this buffer with sound*/
     buffer = new double[initialBufferSize];
@@ -50,18 +54,23 @@ void ofApp::draw(){
     for(int i=0; i < initialBufferSize-1; i++){
         ofLine(i*screenRatio, ofGetHeight()/2 + buffer[i]*100, (i+1)*screenRatio, ofGetHeight()/2 + buffer[i+1]*100);
     }
-    ob.draw();
+    for(int i = 0; i < numOsc; i++){
+        osc_btns[i].draw();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::audioRequested 	(float * output, int bufferSize, int nChannels){
     
     for (int i = 0; i < bufferSize; i++){
-
-        wave=sine1.sinewave(440);
-        buffer[i] = wave;
         
-        mymix.stereo(wave, outputs, 0.5);
+        //tbd: choose the rate wave type according to button press;
+//        wave=sine1.sinewave(440);
+//        buffer[i] = wave;
+        
+        buffer[i] = osc_btns[currOsc].play();
+        
+        mymix.stereo(buffer[i], outputs, 0.5);
         
         output[i*nChannels] = outputs[0]; /* You may end up with lots of outputs. add them here */
         output[i*nChannels+1] = outputs[1];
@@ -97,8 +106,10 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    if(ob.isHovered(x,y)){
-        cout << "hello";
+    for (int i = 0; i < numOsc; i++) {
+        if(osc_btns[i].isHovered(x,y)){
+            currOsc = i;
+        }
     }
 }
 

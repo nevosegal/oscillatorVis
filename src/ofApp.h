@@ -37,7 +37,9 @@ public:
     ofxMaxiOsc sine1;
     double *buffer;
     float screenRatio;
-    OscillatorButton ob;
+    OscillatorButton *osc_btns;
+    int numOsc;
+    int currOsc;
     
     
 };
