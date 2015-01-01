@@ -26,22 +26,14 @@ void ofApp::setup(){
     
     ofEnableAlphaBlending();
     ofSetupScreen();
-    ofBackground(0, 0, 0);
+//    ofBackground(0, 0, 0);
     ofSetVerticalSync(true);
-    
-    /* This is stuff you always need.*/
+    ob = *new OscillatorButton(100,350);
     
     sampleRate 			= 44100; /* Sampling Rate */
     initialBufferSize	= 512;	/* Buffer Size. you have to fill this buffer with sound*/
-    
-    
-    /* Now you can put anything you would normally put in maximilian's 'setup' method in here. */
-    
-    
-//    beat.load(ofToDataPath("beat2.wav"));
-//    beat.getLength();
-    
-    
+    buffer = new double[initialBufferSize];
+    screenRatio = (double)ofGetWidth()/initialBufferSize;
     ofSoundStreamSetup(2,0,this, sampleRate, initialBufferSize, 4);/* Call this last ! */
 }
 
@@ -52,16 +44,13 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-    /* You can use any of the data from audio received and audiorequested to draw stuff here.
-     Importantly, most people just use the input and output arrays defined above.
-     Clever people don't do this. This bit of code shows that by default, each signal is going to flip
-     between -1 and 1. You need to account for this somehow. Get the absolute value for example.
-     */
-    
-    ofSetColor(255, 255, 255,255);
-    ofCircle(200, 300, wave*150);
-    
+    ofBackground(30);
+    ofFill();
+    ofSetColor(220,220,220);
+    for(int i=0; i < initialBufferSize-1; i++){
+        ofLine(i*screenRatio, ofGetHeight()/2 + buffer[i]*100, (i+1)*screenRatio, ofGetHeight()/2 + buffer[i+1]*100);
+    }
+    ob.draw();
 }
 
 //--------------------------------------------------------------
@@ -69,30 +58,19 @@ void ofApp::audioRequested 	(float * output, int bufferSize, int nChannels){
     
     for (int i = 0; i < bufferSize; i++){
 
-        wave=sine1.sinebuf(440);/* mouse controls sinewave pitch. we get abs value to stop it dropping
-                                         //										 delow zero and killing the soundcard*/
+        wave=sine1.sinewave(440);
+        buffer[i] = wave;
         
         mymix.stereo(wave, outputs, 0.5);
         
-        
-        output[i*nChannels    ] = outputs[0]; /* You may end up with lots of outputs. add them here */
-        output[i*nChannels + 1] = outputs[1];
+        output[i*nChannels] = outputs[0]; /* You may end up with lots of outputs. add them here */
+        output[i*nChannels+1] = outputs[1];
     }
     
 }
 
 //--------------------------------------------------------------
 void ofApp::audioReceived 	(float * input, int bufferSize, int nChannels){
-    
-    
-    /* You can just grab this input and stick it in a double, then use it above to create output*/
-    
-    for (int i = 0; i < bufferSize; i++){
-        
-        /* you can also grab the data out of the arrays*/
-        
-        
-    }
     
 }
 
@@ -110,7 +88,6 @@ void ofApp::keyReleased(int key){
 void ofApp::mouseMoved(int x, int y ){
     
     
-    
 }
 
 //--------------------------------------------------------------
@@ -120,7 +97,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    
+    if(ob.isHovered(x,y)){
+        cout << "hello";
+    }
 }
 
 //--------------------------------------------------------------

@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxMaxim.h"
+#include "OscillatorButton.h"
 
 
 class ofApp : public ofBaseApp{
@@ -34,7 +35,9 @@ public:
     double wave,sample,outputs[2];
     ofxMaxiMix mymix;
     ofxMaxiOsc sine1;
-    ofxMaxiSample beats,beat;
+    double *buffer;
+    float screenRatio;
+    OscillatorButton ob;
     
     
 };
