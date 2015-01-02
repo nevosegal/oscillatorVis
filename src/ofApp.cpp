@@ -64,10 +64,6 @@ void ofApp::audioRequested 	(float * output, int bufferSize, int nChannels){
     
     for (int i = 0; i < bufferSize; i++){
         
-        //tbd: choose the rate wave type according to button press;
-//        wave=sine1.sinewave(440);
-//        buffer[i] = wave;
-        
         buffer[i] = osc_btns[currOsc].play();
         
         mymix.stereo(buffer[i], outputs, 0.5);
