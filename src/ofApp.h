@@ -40,6 +40,8 @@ public:
     OscillatorButton *osc_btns;
     int numOsc;
     int currOsc;
+    int ypos;
+    ofTrueTypeFont ttf;
     
     
 };

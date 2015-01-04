@@ -34,11 +34,14 @@ void ofApp::setup(){
     osc_btns[1] = *new OscillatorButton(250,350,"saw");
     osc_btns[2] = *new OscillatorButton(350,350,"square");
     osc_btns[3] = *new OscillatorButton(450,350,"tri");
-    sampleRate 			= 44100; /* Sampling Rate */
-    initialBufferSize	= 512;	/* Buffer Size. you have to fill this buffer with sound*/
+    osc_btns[0].activate();
+    
+    ttf.loadFont("UbuntuMono-Bold.ttf", 16);
+    sampleRate 			= 44100;
+    initialBufferSize	= 512;
     buffer = new double[initialBufferSize];
     screenRatio = (double)ofGetWidth()/initialBufferSize;
-    ofSoundStreamSetup(2,0,this, sampleRate, initialBufferSize, 4);/* Call this last ! */
+    ofSoundStreamSetup(2,0,this, sampleRate, initialBufferSize, 4);
 }
 
 //--------------------------------------------------------------
@@ -50,13 +53,15 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(30);
     ofFill();
-    ofSetColor(220,220,220);
+    ofSetColor(220);
     for(int i=0; i < initialBufferSize-1; i++){
         ofLine(i*screenRatio, ofGetHeight()/2 + buffer[i]*100, (i+1)*screenRatio, ofGetHeight()/2 + buffer[i+1]*100);
     }
     for(int i = 0; i < numOsc; i++){
         osc_btns[i].draw();
     }
+    ofSetColor(220);
+    ttf.drawString(ofToString(osc_btns[currOsc].getFreq()),20, 20);
 }
 
 //--------------------------------------------------------------
@@ -68,7 +73,7 @@ void ofApp::audioRequested 	(float * output, int bufferSize, int nChannels){
         
         mymix.stereo(buffer[i], outputs, 0.5);
         
-        output[i*nChannels] = outputs[0]; /* You may end up with lots of outputs. add them here */
+        output[i*nChannels] = outputs[0];
         output[i*nChannels+1] = outputs[1];
     }
     
@@ -97,7 +102,10 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    
+    int deltay = ypos-y;
+    int currFreq = osc_btns[currOsc].getFreq();
+    osc_btns[currOsc].setFreq(currFreq + deltay);
+    ypos = y;
 }
 
 //--------------------------------------------------------------
@@ -105,6 +113,15 @@ void ofApp::mousePressed(int x, int y, int button){
     for (int i = 0; i < numOsc; i++) {
         if(osc_btns[i].isHovered(x,y)){
             currOsc = i;
+            osc_btns[currOsc].activate();
+            for(int j = 0; j < numOsc; j++){
+                if(j != currOsc){
+                    osc_btns[j].deactivate();
+                }
+            }
+        }
+        else{
+            ypos = y;
         }
     }
 }

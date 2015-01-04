@@ -21,11 +21,20 @@ public:
     void draw();
     bool isHovered(int x, int y);
     double play();
+    void setFreq(int freq);
+    int getFreq();
+    bool isActive();
+    void activate();
+    void deactivate();
     
     int x, y, xsize, ysize;
     maxiOsc osc;
     string type;
     double wave;
+    int freq;
+    bool playing;
+    ofImage img;
+    bool active;
 };
 
 #endif /* defined(__oscillatorVis__OscillatorButton__) */
