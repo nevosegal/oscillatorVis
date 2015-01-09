@@ -14,6 +14,8 @@ OscillatorButton::OscillatorButton(){
 }
 
 OscillatorButton::OscillatorButton(int x, int y, string type){
+    
+    //initial stuff
     this->x = x;
     this->y = y;
     this->type = type;
@@ -22,6 +24,8 @@ OscillatorButton::OscillatorButton(int x, int y, string type){
     freq = 440;
     active = false;
     
+    
+    //choosing the image according to the type
     if(type == "tri"){
         img.loadImage("tri.png");
     }
@@ -36,6 +40,7 @@ OscillatorButton::OscillatorButton(int x, int y, string type){
     }
 }
 
+//play function, returns the sample according to the selected oscillator
 double OscillatorButton::play(){
     if(type == "tri"){
         wave = osc.triangle(freq);
@@ -52,8 +57,11 @@ double OscillatorButton::play(){
     return wave;
 }
 
+//draw function of the button
 void OscillatorButton::draw(){
     ofNoFill();
+    
+    //if active - change color.
     if(active){
         ofSetColor(200);
     }
@@ -65,6 +73,7 @@ void OscillatorButton::draw(){
     img.draw(x, y, xsize, ysize);
 }
 
+//checking if the button is hovered.
 bool OscillatorButton::isHovered(int x, int y){
     if(x > this->x && y > this->y && x < (this->x + xsize) && y < (this->y + ysize)){
         return true;
@@ -72,24 +81,29 @@ bool OscillatorButton::isHovered(int x, int y){
     return false;
 }
 
+//setting the frequency (if in range)
 void OscillatorButton::setFreq(int freq){
     if(freq > 0 && freq < 22050){
         this->freq = freq;
     }
 }
 
+//getting the frequency
 int OscillatorButton::getFreq(){
     return freq;
 }
 
+//checking if oscillator is active
 bool OscillatorButton::isActive(){
     return active;
 }
 
+//activating the oscillator
 void OscillatorButton::activate(){
     active = true;
 }
 
+//deactivating the oscillator
 void OscillatorButton::deactivate(){
     active = false;
 }

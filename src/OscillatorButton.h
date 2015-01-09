@@ -15,9 +15,12 @@
 
 class OscillatorButton{
 public:
+    
+    //constructors
     OscillatorButton();
     OscillatorButton(int x, int y, string type);
     
+    //class methods
     void draw();
     bool isHovered(int x, int y);
     double play();
@@ -27,12 +30,12 @@ public:
     void activate();
     void deactivate();
     
+    //class variables
     int x, y, xsize, ysize;
     maxiOsc osc;
     string type;
     double wave;
     int freq;
-    bool playing;
     ofImage img;
     bool active;
 };
